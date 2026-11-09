@@ -31,7 +31,7 @@ A public GitHub repository is **not** an automatic submission or directory accep
 
 ## Official MCP Registry — automated publishing
 
-This repository's `server.json` uses **`io.github.pedidosuno/changuito-mcp`** to match the repository owner. The live MCP endpoint remains `https://mcp.changuito.net/mcp`.
+This repository's `server.json` uses **`io.github.PedidosUno/changuito-mcp`** to match the repository owner. The live MCP endpoint remains `https://mcp.changuito.net/mcp`.
 
 The workflow [publish-mcp-registry.yml](../.github/workflows/publish-mcp-registry.yml) runs after changes to the manifest or publish workflow are merged to `main`. It can also be started manually using **Actions → Publish Changuito MCP to Official Registry → Run workflow**, selecting `main`.
 
@@ -43,6 +43,6 @@ The [validation workflow](../.github/workflows/validate-metadata.yml) validates 
 
 The Official Registry entry is a **different registry identifier** from the application's legacy discovery name `net.changuito/tienda`. Clients still connect to the same remote MCP URL. The live application's internal discovery metadata is not changed here.
 
-**Check publication:** https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.pedidosuno%2Fchanguito-mcp
+**Check publication:** https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.PedidosUno%2Fchanguito-mcp
 
 **Recommended tags:** ecommerce, online-store, store-builder, business, latin-america, remote-mcp, oauth.
