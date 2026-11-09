@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "net.changuito/tienda",
+  "name": "io.github.pedidosuno/changuito-mcp",
   "title": "Changuito — Create an Online Store with AI",
   "description": "Create and customize online stores through AI chat in 10 Latin American countries.",
   "version": "1.0.0",
