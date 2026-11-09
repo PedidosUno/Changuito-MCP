@@ -20,7 +20,7 @@
 
 | Directory | Destination | Notes |
 | --- | --- | --- |
-| Official MCP Registry | https://registry.modelcontextprotocol.io/ | Publisher CLI, domain ownership verification |
+| Official MCP Registry | https://registry.modelcontextprotocol.io/ | GitHub Actions OIDC, no DNS verification |
 | MCP.so | https://mcp.so/submit | Follow current submission form |
 | MCP Directory | https://mcp.directory/submit | Follow current submission form |
 | Glama | https://glama.ai/mcp/servers | Check current submission/claim process |
@@ -29,16 +29,20 @@
 
 A public GitHub repository is **not** an automatic submission or directory acceptance.
 
-## Official MCP Registry
+## Official MCP Registry — automated publishing
 
-The remote server descriptor in [../server.json](../server.json) uses namespace `net.changuito/tienda`, which requires proof of control over **changuito.net**.
+This repository's `server.json` uses **`io.github.pedidosuno/changuito-mcp`** to match the repository owner. The live MCP endpoint remains `https://mcp.changuito.net/mcp`.
 
-1. Download the publisher CLI from https://github.com/modelcontextprotocol/registry/releases .
-2. In this repository, check `mcp-publisher --help` and validate `server.json`.
-3. Follow the [official publishing guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx) to authenticate via DNS or HTTP domain ownership. **Never commit the signing key or verification secrets.**
-4. Publish the manifest and verify the resulting entry in the Official Registry.
-5. Submit the public GitHub URL and remote MCP endpoint to other catalogs.
+The workflow [publish-mcp-registry.yml](../.github/workflows/publish-mcp-registry.yml) runs after changes to the manifest or publish workflow are merged to `main`. It can also be started manually using **Actions → Publish Changuito MCP to Official Registry → Run workflow**, selecting `main`.
 
-**Important:** GitHub login is not equivalent to ownership of the `net.changuito` domain namespace. The production metadata may use an older schema; the repository manifest must pass official CLI validation before publication.
+The workflow checks the namespace and endpoint, downloads the official `mcp-publisher` release, validates `server.json`, authenticates with **`mcp-publisher login github-oidc`** using GitHub's short-lived OIDC token (`id-token: write`), publishes and checks that the public Registry API returns the record.
+
+The [validation workflow](../.github/workflows/validate-metadata.yml) validates metadata on every PR; merge only when it succeeds. The private production application is never deployed or modified by either workflow.
+
+**No GitHub Personal Access Token, domain key, DNS TXT record or repository secret is needed for GitHub OIDC.**
+
+The Official Registry entry is a **different registry identifier** from the application's legacy discovery name `net.changuito/tienda`. Clients still connect to the same remote MCP URL. The live application's internal discovery metadata is not changed here.
+
+**Check publication:** https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.pedidosuno%2Fchanguito-mcp
 
 **Recommended tags:** ecommerce, online-store, store-builder, business, latin-america, remote-mcp, oauth.
