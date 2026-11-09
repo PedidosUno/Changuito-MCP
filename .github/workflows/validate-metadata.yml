@@ -18,7 +18,7 @@ jobs:
           import json
           from pathlib import Path
           data = json.loads(Path('server.json').read_text())
-          assert data['name'] == 'io.github.pedidosuno/changuito-mcp'
+          assert data['name'] == 'io.github.PedidosUno/changuito-mcp'
           assert data['remotes'] == [{'type': 'streamable-http', 'url': 'https://mcp.changuito.net/mcp'}]
           assert data['repository']['url'] == 'https://github.com/PedidosUno/Changuito-MCP'
           assert len(data['description']) <= 100
