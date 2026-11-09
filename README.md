@@ -3,7 +3,7 @@
 **Official public discovery repository for Changuito's hosted MCP server.** This is documentation only. Changuito's production code, credentials and infrastructure are **not** published here.
 
 **Remote MCP endpoint:** `https://mcp.changuito.net/mcp`  
-**Transport:** Streamable HTTP · **Authentication:** OAuth with PKCE (S256) · **Registry ID:** `net.changuito/tienda`
+**Transport:** Streamable HTTP · **Authentication:** OAuth with PKCE (S256) · **Registry ID:** `io.github.pedidosuno/changuito-mcp`
 
 [Create an online store with AI](https://changuito.com.ar/crear-con-ia) · [Server manifest](server.json) · [Tools](docs/tools.md) · [Authentication](docs/authentication.md) · [Directory submissions](docs/directories.md)
 
@@ -42,7 +42,7 @@ Authentication and user authorization happen on Changuito's website. Documented 
 - [Production registry metadata](https://mcp.changuito.net/.well-known/mcp/server.json)
 - [OpenAPI](https://mcp.changuito.net/ai/v1/openapi.json)
 
-This repository **does not mean the server has already been accepted into directories**; publication requires each directory's submission process and, for the Official Registry, domain ownership verification.
+This repository **does not mean the server has already been accepted into directories**; publication requires each directory's submission process. The Official Registry publication uses GitHub Actions OIDC for the GitHub-owned namespace; no DNS verification is required. [See the publishing guide](docs/directories.md).
 
 [Terms](https://changuito.com.ar/terminos) · [Privacy](https://changuito.com.ar/privacidad) · **Support:** soporte@changuito.com.ar
 
