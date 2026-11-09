@@ -3,22 +3,35 @@ on:
   push:
     branches: [main]
   pull_request:
+
+permissions:
+  contents: read
+
 jobs:
   metadata:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Check manifest JSON and required fields
+      - name: Check manifest identity and expected public fields
         run: |
           python3 - <<'PY'
           import json
           from pathlib import Path
           data = json.loads(Path('server.json').read_text())
-          assert data['name'] == 'net.changuito/tienda'
+          assert data['name'] == 'io.github.pedidosuno/changuito-mcp'
           assert data['remotes'] == [{'type': 'streamable-http', 'url': 'https://mcp.changuito.net/mcp'}]
           assert data['repository']['url'] == 'https://github.com/PedidosUno/Changuito-MCP'
           assert len(data['description']) <= 100
-          print('Static metadata OK (not live connectivity or official registry schema validation)')
+          assert data['$schema'] == 'https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json'
+          print('Static metadata checks passed')
           PY
+      - name: Install mcp-publisher (official release)
+        run: |
+          set -euo pipefail
+          version="v1.8.1"
+          archive="mcp-publisher_linux_amd64.tar.gz"
+          curl --fail --location --retry 3 --silent --show-error             --output "$archive"             "https://github.com/modelcontextprotocol/registry/releases/download/${version}/${archive}"
+          tar xzf "$archive" mcp-publisher
+          chmod +x ./mcp-publisher
+      - name: Validate using official MCP publisher CLI
+        run: ./mcp-publisher validate server.json
