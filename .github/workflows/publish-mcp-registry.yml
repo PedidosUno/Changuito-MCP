@@ -32,7 +32,7 @@ jobs:
           import json
           from pathlib import Path
           data = json.loads(Path('server.json').read_text())
-          assert data['name'] == 'io.github.pedidosuno/changuito-mcp'
+          assert data['name'] == 'io.github.PedidosUno/changuito-mcp'
           assert data['remotes'] == [{'type': 'streamable-http', 'url': 'https://mcp.changuito.net/mcp'}]
           print('Publishing GitHub-owned namespace and expected remote endpoint')
           PY
@@ -55,7 +55,7 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           import json, time, urllib.parse, urllib.request
-          name = 'io.github.pedidosuno/changuito-mcp'
+          name = 'io.github.PedidosUno/changuito-mcp'
           endpoint = 'https://registry.modelcontextprotocol.io/v0.1/servers?search=' + urllib.parse.quote(name)
           for attempt in range(5):
               try:
