@@ -1,0 +1,73 @@
+name: Publish Changuito MCP to Official Registry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - server.json
+      - .github/workflows/publish-mcp-registry.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mcp-registry-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # GitHub OIDC; no stored PAT or domain key needed.
+    steps:
+      - name: Checkout verified default branch
+        uses: actions/checkout@v4
+      - name: Check publication context and namespace
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = "refs/heads/main"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('server.json').read_text())
+          assert data['name'] == 'io.github.pedidosuno/changuito-mcp'
+          assert data['remotes'] == [{'type': 'streamable-http', 'url': 'https://mcp.changuito.net/mcp'}]
+          print('Publishing GitHub-owned namespace and expected remote endpoint')
+          PY
+      - name: Install publisher from official tagged release
+        run: |
+          set -euo pipefail
+          version="v1.8.1"
+          archive="mcp-publisher_linux_amd64.tar.gz"
+          curl --fail --location --retry 3 --silent --show-error             --output "$archive"             "https://github.com/modelcontextprotocol/registry/releases/download/${version}/${archive}"
+          tar xzf "$archive" mcp-publisher
+          chmod +x ./mcp-publisher
+      - name: Validate official server manifest
+        run: ./mcp-publisher validate server.json
+      - name: Authenticate via GitHub Actions OIDC
+        run: ./mcp-publisher login github-oidc
+      - name: Publish to the official MCP Registry
+        run: ./mcp-publisher publish server.json
+      - name: Verify listing in public MCP Registry API
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, time, urllib.parse, urllib.request
+          name = 'io.github.pedidosuno/changuito-mcp'
+          endpoint = 'https://registry.modelcontextprotocol.io/v0.1/servers?search=' + urllib.parse.quote(name)
+          for attempt in range(5):
+              try:
+                  with urllib.request.urlopen(endpoint, timeout=20) as response:
+                      data = json.load(response)
+                  found = any((entry.get('server') or entry).get('name') == name for entry in data.get('servers', []))
+                  if found:
+                      print('Verified official registry listing:', name)
+                      break
+              except Exception as exc:
+                  print('Registry listing check pending:', str(exc))
+              if attempt == 4:
+                  raise SystemExit('Registry did not return the expected server after publication')
+              time.sleep(6)
+          PY
