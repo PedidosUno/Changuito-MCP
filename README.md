@@ -3,7 +3,7 @@
 **Official public discovery repository for Changuito's hosted MCP server.** This is documentation only. Changuito's production code, credentials and infrastructure are **not** published here.
 
 **Remote MCP endpoint:** `https://mcp.changuito.net/mcp`  
-**Transport:** Streamable HTTP · **Authentication:** OAuth with PKCE (S256) · **Registry ID:** `io.github.pedidosuno/changuito-mcp`
+**Transport:** Streamable HTTP · **Authentication:** OAuth with PKCE (S256) · **Registry ID:** `io.github.PedidosUno/changuito-mcp`
 
 [Create an online store with AI](https://changuito.com.ar/crear-con-ia) · [Server manifest](server.json) · [Tools](docs/tools.md) · [Authentication](docs/authentication.md) · [Directory submissions](docs/directories.md)
 
